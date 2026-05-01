@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="FOLIO — India's most advanced financial return calculator. Compute Simple Returns, Compound Interest, SIP with step-up, and Goal Planning with real-time charts and tax-adjusted projections."/>
+  <meta name="keywords" content="return calculator, SIP calculator, compound interest, investment calculator, CAGR, India finance"/>
+  <title>FOLIO — Advanced Return Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- ── Chatbot + Enhancement Overrides ── -->
+  <style>
+    /* ─── Scroll Reveal ─── */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
+    .reveal-delay-4 { transition-delay: 0.32s; }
+    .reveal-delay-5 { transition-delay: 0.40s; }
+    .reveal-delay-6 { transition-delay: 0.48s; }
+
+    /* ─── Active nav link ─── */
+    .nav-links a.active-section { color: var(--accent-light); }
+    body.light .nav-links a.active-section { color: var(--accent); }
+
+    /* ─── Animated grid particles in hero ─── */
+    .hero-particles {
+      position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+    }
+    .hero-particles span {
+      position: absolute; width: 2px; height: 2px; border-radius: 50%;
+      background: var(--accent-light); opacity: 0;
+      animation: floatUp var(--dur, 6s) var(--delay, 0s) ease-in-out infinite;
+    }
+    body.light .hero-particles span { background: var(--accent); }
+    @keyframes floatUp {
+      0%   { transform: translateY(0) scale(1); opacity: 0; }
+      20%  { opacity: 0.5; }
+      80%  { opacity: 0.2; }
+      100% { transform: translateY(-160px) scale(0); opacity: 0; }
+    }
+
+    /* ─── Progress bar on top ─── */
+    .scroll-progress {
+      position: fixed; top: 0; left: 0; height: 2px; z-index: 9999;
+      background: linear-gradient(90deg, var(--accent), var(--green));
+      width: 0%; transition: width 0.1s linear;
+    }
+
+    /* ─── Ticker enhancement ─── */
+    .ticker-bar { position: sticky; top: 62px; }
+    @media (max-width:768px){ .ticker-bar { top: 58px; } }
+
+    /* ─── ════ CHATBOT BUTTON ════ ─── */
+    /* Chatbase default UI hidden — custom iframe panel used instead */
+
+    .folio-chat-wrapper {
+      position: fixed; bottom: 28px; right: 28px; z-index: 99990;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .folio-chat-btn {
+      position: relative; display: flex; align-items: center;
+      justify-content: center; cursor: pointer;
+      filter: drop-shadow(0 8px 24px rgba(37,99,235,0.35));
+      transition: filter 0.3s ease, transform 0.25s ease;
+    }
+    .folio-chat-btn:hover { filter: drop-shadow(0 12px 32px rgba(37,99,235,0.55)); transform: scale(1.07); }
+    .folio-chat-btn:active { transform: scale(0.97); }
+
+    /* ── OPTION 1: Hex AI Core (DEFAULT) ── */
+    .hex-design { width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
+    .hex-ring {
+      position: absolute; width: 64px; height: 64px;
+      clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+      background: linear-gradient(135deg,#2563EB,#8B5CF6,#10B981,#2563EB);
+      background-size: 200% 200%;
+      animation: hexspin 5s linear infinite, hexgradshift 4s ease infinite;
+    }
+    .hex-body {
+      position: relative; z-index: 1; width: 46px; height: 46px;
+      clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+      background: #070C18; display: flex; align-items: center; justify-content: center;
+    }
+    body.light .hex-body { background: #F8FAFC; }
+    .hex-core {
+      width: 15px; height: 15px; border-radius: 50%; background: #60A5FA;
+      box-shadow: 0 0 10px #60A5FA, 0 0 22px rgba(96,165,250,0.5);
+      animation: corepulse 1.8s ease-in-out infinite;
+    }
+    @keyframes hexspin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    @keyframes hexgradshift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+    @keyframes corepulse {
+      0%,100%{transform:scale(1);box-shadow:0 0 10px #60A5FA,0 0 22px rgba(96,165,250,0.4)}
+      50%{transform:scale(1.5);box-shadow:0 0 18px #60A5FA,0 0 40px rgba(96,165,250,0.8)}
+    }
+
+    /* ── OPTION 2: Orbital Bot ── */
+    .orbital-design { width: 72px; height: 72px; display: flex; align-items: center; justify-content: center; }
+    .orb-core {
+      width: 24px; height: 24px; border-radius: 50%; z-index: 2; position: relative;
+      background: radial-gradient(circle at 35% 35%,#60A5FA,#1D4ED8);
+      box-shadow: 0 0 14px rgba(37,99,235,0.9);
+    }
+    .orb-ring { position: absolute; border-radius: 50%; border: 1.5px solid transparent; }
+    .orb-r1 { width:44px;height:44px;border-color:rgba(96,165,250,0.9);border-bottom-color:transparent;animation:orb1 1.8s linear infinite; }
+    .orb-r2 { width:60px;height:60px;border-color:rgba(139,92,246,0.65);border-left-color:transparent;animation:orb1 3s linear infinite reverse; }
+    .orb-r3 { width:76px;height:76px;border-color:rgba(37,99,235,0.35);border-top-color:rgba(37,99,235,0.85);animation:orb1 5s linear infinite; }
+    @keyframes orb1{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+    /* ── OPTION 3: Crystal AI ── */
+    .crystal-design { width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
+    .crystal-gem {
+      width: 54px; height: 54px;
+      clip-path: polygon(50% 0%,100% 35%,80% 100%,20% 100%,0% 35%);
+      background: linear-gradient(145deg,#0EA5E9 0%,#10B981 50%,#6366F1 100%);
+      position: relative; animation: cshimmer 2.5s ease-in-out infinite;
+    }
+    .crystal-gem::before {
+      content:''; position:absolute;inset:0;
+      clip-path:polygon(50% 0%,100% 35%,80% 100%,20% 100%,0% 35%);
+      background:linear-gradient(145deg,rgba(255,255,255,0.65) 0%,transparent 45%);
+      animation: cgleam 2.5s ease-in-out infinite;
+    }
+    @keyframes cshimmer{0%,100%{filter:brightness(1) drop-shadow(0 0 8px rgba(14,165,233,0.5))}50%{filter:brightness(1.25) drop-shadow(0 0 20px rgba(16,185,129,0.8))}}
+    @keyframes cgleam{0%{opacity:0.2}50%{opacity:1}100%{opacity:0.2}}
+
+    /* ── Notification Dot ── */
+    .chat-notif-dot {
+      position: absolute; top: -3px; right: -3px;
+      width: 13px; height: 13px; border-radius: 50%;
+      background: #EF4444; border: 2.5px solid #070C18;
+      animation: notifp 1.5s ease-in-out infinite; z-index: 20;
+      transition: opacity 0.3s;
+    }
+    body.light .chat-notif-dot { border-color: #F8FAFC; }
+    @keyframes notifp{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+
+    /* ── Tooltip ── */
+    .chat-tooltip {
+      position: absolute; right: 78px; bottom: 50%;
+      transform: translateY(50%) translateX(6px);
+      white-space: nowrap;
+      background: rgba(13,20,38,0.97); border: 1px solid rgba(37,99,235,0.40);
+      color: #F1F5F9; font-family: 'Syne', sans-serif;
+      font-size: 12px; font-weight: 700; padding: 8px 14px; border-radius: 10px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.22s, transform 0.22s;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .chat-tooltip::after {
+      content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%);
+      border: 6px solid transparent; border-right: none;
+      border-left-color: rgba(37,99,235,0.40);
+    }
+    body.light .chat-tooltip { background: rgba(255,255,255,0.98); color: #0F172A; box-shadow: 0 4px 16px rgba(0,0,0,0.12); border-color: rgba(37,99,235,0.25); }
+    body.light .chat-tooltip::after { border-left-color: rgba(37,99,235,0.25); }
+    .folio-chat-wrapper:hover .chat-tooltip { opacity: 1; transform: translateY(50%) translateX(0); }
+
+    /* ── AI Nudge Chip ── */
+    .ai-nudge-chip {
+      position: fixed; bottom: 104px; right: 28px; z-index: 99989;
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(11,17,32,0.97); border: 1px solid rgba(37,99,235,0.38);
+      border-radius: 28px; padding: 11px 16px 11px 14px;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
+      color: #F1F5F9; cursor: pointer;
+      opacity: 0; transform: translateY(12px) scale(0.95);
+      transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45), 0 0 0 1px rgba(37,99,235,0.15);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    }
+    body.light .ai-nudge-chip { background: rgba(255,255,255,0.98); color: #0F172A; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    .ai-nudge-chip.visible { opacity: 1; transform: translateY(0) scale(1); }
+    .ai-nudge-chip:hover { border-color: rgba(37,99,235,0.65); }
+    .ai-nudge-icon {
+      width: 24px; height: 24px; border-radius: 50%; background: var(--accent-d);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; flex-shrink: 0;
+      animation: spinicon 6s linear infinite; color: #60A5FA;
+    }
+    @keyframes spinicon { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+    .ai-nudge-close {
+      background: none; border: none; color: #64748B;
+      font-size: 20px; cursor: pointer; padding: 0; line-height: 1; margin-left: 2px; flex-shrink: 0;
+    }
+    .ai-nudge-close:hover { color: var(--text); }
+
+    /* ── Glow pulse behind chat button ── */
+    .chat-glow {
+      position: absolute; width: 80px; height: 80px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,0.35) 0%, transparent 70%);
+      animation: chatglow 2.5s ease-in-out infinite; pointer-events: none;
+    }
+    @keyframes chatglow{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.5);opacity:0.15}}
+
+    /* ─── Hero glow orb ─── */
+    .hero-glow-orb {
+      position: absolute; pointer-events: none; z-index: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,0.14) 0%, transparent 65%);
+    }
+    .hero-glow-orb.orb-a { width: 600px; height: 600px; top: -200px; right: -100px; }
+    .hero-glow-orb.orb-b { width: 400px; height: 400px; bottom: -100px; left: -80px; background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 65%); }
+    body.light .hero-glow-orb.orb-a { background: radial-gradient(circle, rgba(37,99,235,0.07) 0%, transparent 65%); }
+
+    /* ─── Section dividers with label ─── */
+    .section-divider {
+      max-width: 1100px; margin: 0 auto; padding: 0 28px;
+      display: flex; align-items: center; gap: 20px;
+    }
+    .section-divider::before, .section-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .section-divider span {
+      font-family: 'Space Mono', monospace; font-size: 8px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-dim); white-space: nowrap;
+    }
+
+    /* ─── Improved feature icon ─── */
+    .feat-icon-wrap {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--accent-d); border: 1px solid var(--accent-g);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 14px;
+      transition: transform 0.25s ease, background 0.25s;
+    }
+    .feat-card:hover .feat-icon-wrap { transform: scale(1.1) rotate(-4deg); background: var(--accent-g); }
+
+    /* ─── Floating "back to top" ─── */
+    .back-top {
+      position: fixed; bottom: 28px; left: 28px; z-index: 99980;
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--surface); border: 1px solid var(--border-hi);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; color: var(--text-dim); cursor: pointer;
+      opacity: 0; transform: translateY(8px);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(20px);
+    }
+    .back-top.visible { opacity: 1; transform: translateY(0); }
+    .back-top:hover { border-color: var(--accent-g); color: var(--accent-light); background: var(--accent-d); }
+    body.light .back-top:hover { color: var(--accent); }
+
+    /* ─── Stat card entrance ─── */
+    @keyframes slideInCard {
+      from { opacity: 0; transform: translateY(14px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .hero-stat-card { animation: slideInCard 0.6s cubic-bezier(0.16,1,0.3,1) both; }
+    .hero-stat-card:nth-child(1) { animation-delay: 0.25s; }
+    .hero-stat-card:nth-child(2) { animation-delay: 0.35s; }
+    .hero-stat-card:nth-child(3) { animation-delay: 0.45s; }
+    .hero-stat-card:nth-child(4) { animation-delay: 0.55s; }
+
+    /* ─── FOLIO AI badge on chatbot ─── */
+    .chat-badge {
+      position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: #fff; border-radius: 20px;
+      font-family: 'Space Mono', monospace; font-size: 7px; font-weight: 700;
+      letter-spacing: 0.08em; padding: 2px 7px; white-space: nowrap;
+      border: 1.5px solid rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Scroll Progress Bar ── -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ── Back to Top ── -->
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<!-- ══════════════════════════════════════════════
+     TOAST NOTIFICATION
+══════════════════════════════════════════════ -->
+<div id="toast" class="toast">
+  <span id="toast-icon">✓</span>
+  <span id="toast-msg">Copied!</span>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     STICKY NAVBAR
+══════════════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a class="nav-brand" href="#">
+      <span class="brand-logo">F</span>
+      <span class="brand-name">FOLIO</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#calculators">Calculators</a></li>
+      <li><a href="#benchmarks">Benchmarks</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">
+        <span id="theme-icon">☀</span>
+      </button>
+      <a href="#calculators" class="nav-cta">Start Calculating</a>
+    </div>
+
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#features" onclick="toggleMenu()">Features</a>
+    <a href="#calculators" onclick="toggleMenu()">Calculators</a>
+    <a href="#benchmarks" onclick="toggleMenu()">Benchmarks</a>
+    <a href="#faq" onclick="toggleMenu()">FAQ</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     LIVE MARKET BAR — Fixed Slots
+══════════════════════════════════════════════ -->
+<div class="ticker-bar" id="tickerBar">
+  <div class="ticker-label">
+    <div class="ticker-dot"></div>
+    LIVE
+  </div>
+  <div class="ticker-slots" id="tickerSlots">
+    <div class="ticker-slot" id="ts-0"></div>
+    <div class="ticker-slot" id="ts-1"></div>
+    <div class="ticker-slot" id="ts-2"></div>
+    <div class="ticker-slot" id="ts-3"></div>
+    <div class="ticker-slot" id="ts-4"></div>
+    <div class="ticker-slot" id="ts-5"></div>
+    <div class="ticker-slot" id="ts-6"></div>
+  </div>
+  <div class="ticker-time" id="tickerTime"></div>
+  <button class="ticker-search-btn" id="tickerSearchBtn" onclick="openStockSearch()" title="Search stocks">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Search</span>
+  </button>
+</div>
+
+<!-- STOCK SEARCH MODAL -->
+<!-- stock search modal moved to end of body -->
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <!-- Decorative glows -->
+  <div class="hero-glow-orb orb-a"></div>
+  <div class="hero-glow-orb orb-b"></div>
+  <!-- Floating particles -->
+  <div class="hero-particles" id="heroParticles"></div>
+
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <span class="dot-pulse"></span>
+        <span>REAL-TIME FINANCIAL INTELLIGENCE</span>
+      </div>
+      <h1 class="hero-title">
+        Make Every<br/>
+        Rupee<br/>
+        <em>Work Harder</em>
+      </h1>
+      <p class="hero-desc">
+        Professional-grade investment calculators with tax adjustment, inflation modelling, benchmark comparison, and multi-scenario analysis — built for the serious Indian investor.
+      </p>
+      <div class="hero-actions">
+        <a href="#calculators" class="btn-primary">Start Calculating <span>→</span></a>
+        <a href="#features" class="btn-ghost">See Features</a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-stat-card">
+        <div class="hsc-label">Nifty 50 CAGR (20yr)</div>
+        <div class="hsc-value lime">+14.8%</div>
+      </div>
+      <div class="hero-stat-card">
+        <div class="hsc-label">Avg Inflation (10yr)</div>
+        <div class="hsc-value amber">6.2%</div>
+      </div>
+      <div class="hero-stat-card">
+        <div class="hsc-label">FD Returns (2024)</div>
+        <div class="hsc-value dim">7.1%</div>
+      </div>
+      <div class="hero-stat-card highlight">
+        <div class="hsc-label">Equity Real Return</div>
+        <div class="hsc-value lime">+8.1% <small>post-inflation</small></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll-hint">
+    <span>Scroll to explore</span>
+    <div class="scroll-arrow">↓</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TRUST STRIP
+══════════════════════════════════════════════ -->
+<div class="trust-strip">
+  <div class="trust-item"><span class="trust-num" data-target="4">4</span><span class="trust-lbl">Calculators</span></div>
+  <div class="trust-div"></div>
+  <div class="trust-item"><span class="trust-num" data-target="12">12</span><span class="trust-lbl">Metrics Tracked</span></div>
+  <div class="trust-div"></div>
+  <div class="trust-item"><span class="trust-num" data-target="40">40</span><span class="trust-lbl">Year Projections</span></div>
+  <div class="trust-div"></div>
+  <div class="trust-item"><span class="trust-num" data-target="100">100%</span><span class="trust-lbl">Free to Use</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     FEATURES
+══════════════════════════════════════════════ -->
+<section class="features-section" id="features">
+  <div class="section-header reveal">
+    <div class="section-tag">What We Offer</div>
+    <h2 class="section-title">Everything You Need to<br/><em>Analyse Returns</em></h2>
+    <p class="section-sub">Built for retail investors, financial advisors, and analysts who demand precision.</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feat-card feat-clickable reveal reveal-delay-1" onclick="switchMode('simple')">
+      <div class="feat-icon-wrap">📈</div>
+      <h3>Simple Return Analysis</h3>
+      <p>Calculate net gain/loss with fee deduction, capital gains tax, CAGR and inflation-adjusted real returns on any single investment.</p>
+      <div class="feat-tag">For: Stocks · FDs · Gold · Real Estate</div>
+      <div class="feat-arrow">Try Calculator →</div>
+    </div>
+    <div class="feat-card feat-clickable reveal reveal-delay-2" onclick="switchMode('compound')">
+      <div class="feat-icon-wrap">🔄</div>
+      <h3>Compound Interest Engine</h3>
+      <p>Model exponential growth with 5 compounding frequencies. See Effective Annual Rate, doubling time via Rule of 72, and post-tax real value.</p>
+      <div class="feat-tag">For: FDs · RDs · Bonds · NSC</div>
+      <div class="feat-arrow">Try Calculator →</div>
+    </div>
+    <div class="feat-card feat-clickable reveal reveal-delay-3" onclick="switchMode('sip')">
+      <div class="feat-icon-wrap">📅</div>
+      <h3>SIP with Step-Up</h3>
+      <p>Systematic investment planner with annual step-up, inflation drag, post-tax corpus, and month-by-month simulation over 40 years.</p>
+      <div class="feat-tag">For: Mutual Funds · ELSS · Index Funds</div>
+      <div class="feat-arrow">Try Calculator →</div>
+    </div>
+    <div class="feat-card feat-clickable reveal reveal-delay-4" onclick="switchMode('goal')">
+      <div class="feat-icon-wrap">🎯</div>
+      <h3>Goal Planner</h3>
+      <p>Work backwards from your target — enter what you want to achieve and get the exact monthly investment needed to get there.</p>
+      <div class="feat-tag">For: Retirement · Education · Home</div>
+      <div class="feat-arrow">Try Calculator →</div>
+    </div>
+    <div class="feat-card feat-clickable reveal reveal-delay-5" onclick="document.getElementById('benchmarks').scrollIntoView({behavior:'smooth'})">
+      <div class="feat-icon-wrap">⚡</div>
+      <h3>Benchmark Comparison</h3>
+      <p>Compare your projected returns against Nifty 50, Sensex, Gold, PPF, FD, and RBI Inflation in a side-by-side table.</p>
+      <div class="feat-tag">Know how you stack up</div>
+      <div class="feat-arrow">View Benchmarks →</div>
+    </div>
+    <div class="feat-card feat-clickable reveal reveal-delay-6" onclick="switchMode('simple')">
+      <div class="feat-icon-wrap">📤</div>
+      <h3>Export &amp; Share</h3>
+      <p>Download year-by-year projections as CSV, copy results summary to clipboard, or print a clean PDF-ready report.</p>
+      <div class="feat-tag">For: Reports · Advisors · Records</div>
+      <div class="feat-arrow">Open Calculator →</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     CALCULATORS SECTION
+══════════════════════════════════════════════ -->
+<section class="calc-section" id="calculators">
+  <div class="section-header">
+    <div class="section-tag">The Tools</div>
+    <h2 class="section-title">Four Precision<br/><em>Calculators</em></h2>
+  </div>
+
+  <!-- Mode Nav -->
+  <nav class="mode-nav">
+    <button class="mnav-btn active" data-mode="simple" onclick="switchMode('simple')">
+      <span class="mnav-num">01</span>
+      <div class="mnav-info">
+        <span class="mnav-label">Simple Return</span>
+        <span class="mnav-desc">Single investment P&L</span>
+      </div>
+      <span class="mnav-arrow">→</span>
+    </button>
+    <button class="mnav-btn" data-mode="compound" onclick="switchMode('compound')">
+      <span class="mnav-num">02</span>
+      <div class="mnav-info">
+        <span class="mnav-label">Compound Interest</span>
+        <span class="mnav-desc">Exponential growth</span>
+      </div>
+      <span class="mnav-arrow">→</span>
+    </button>
+    <button class="mnav-btn" data-mode="sip" onclick="switchMode('sip')">
+      <span class="mnav-num">03</span>
+      <div class="mnav-info">
+        <span class="mnav-label">SIP / Recurring</span>
+        <span class="mnav-desc">Monthly investments</span>
+      </div>
+      <span class="mnav-arrow">→</span>
+    </button>
+    <button class="mnav-btn" data-mode="goal" onclick="switchMode('goal')">
+      <span class="mnav-num">04</span>
+      <div class="mnav-info">
+        <span class="mnav-label">Goal Planner</span>
+        <span class="mnav-desc">Reverse calculate SIP</span>
+      </div>
+      <span class="mnav-arrow">→</span>
+    </button>
+  </nav>
+
+  <!-- ════ PANEL 1 — SIMPLE RETURN ════ -->
+  <div class="panel" id="panel-simple">
+    <div class="panel-header">
+      <div class="panel-tag">Module 01</div>
+      <h2 class="panel-title">Simple<br/><em>Return</em></h2>
+      <p class="panel-blurb">Full P&amp;L on any single investment. Accounts for brokerage fees, capital gains tax (STCG/LTCG), CAGR, and inflation-adjusted real return.</p>
+    </div>
+
+    <div class="calc-layout">
+      <!-- Inputs -->
+      <div class="inputs-col">
+        <div class="field-section-label">Investment</div>
+
+        <div class="field-group">
+          <label class="field-label">Purchase Price / Initial Investment</label>
+          <div class="field-track">
+            <span class="field-curr">₹</span>
+            <input type="number" id="s-initial" value="100000" min="0" oninput="calcSimple()"/>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Current Value / Sale Price</label>
+          <div class="field-track">
+            <span class="field-curr">₹</span>
+            <input type="number" id="s-final" value="145000" min="0" oninput="calcSimple()"/>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Holding Period
+            <span class="field-badge" id="s-years-badge">3 yrs</span>
+          </label>
+          <input type="range" class="styled-range" id="s-years-r" min="0.25" max="30" step="0.25" value="3"
+                 oninput="syncS('s-years','s-years-badge',this.value,'yrs'); calcSimple()"/>
+          <input type="hidden" id="s-years" value="3"/>
+          <div class="slider-ends"><span>0.25 yr</span><span>30 yrs</span></div>
+        </div>
+
+        <div class="field-section-label" style="margin-top:8px">Fees &amp; Tax</div>
+
+        <div class="two-col-fields">
+          <div class="field-group">
+            <label class="field-label">Brokerage / Fee</label>
+            <div class="field-track">
+              <input type="number" id="s-fee" value="0.5" step="0.01" min="0" oninput="calcSimple()"/>
+              <span class="field-unit">%</span>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Capital Gains Tax</label>
+            <div class="field-track">
+              <input type="number" id="s-tax" value="10" step="0.5" min="0" oninput="calcSimple()"/>
+              <span class="field-unit">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">STT (Securities Transaction Tax)</label>
+          <div class="field-track">
+            <input type="number" id="s-stt" value="0.1" step="0.01" min="0" oninput="calcSimple()"/>
+            <span class="field-unit">%</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Inflation Rate
+            <span class="field-badge" id="s-infl-badge">5%</span>
+          </label>
+          <input type="range" class="styled-range" id="s-infl-r" min="0" max="20" step="0.5" value="5"
+                 oninput="syncS('s-inflation','s-infl-badge',this.value,'%'); calcSimple()"/>
+          <input type="hidden" id="s-inflation" value="5"/>
+          <div class="slider-ends"><span>0%</span><span>20%</span></div>
+        </div>
+
+        <div class="btn-row">
+          <button class="cta-btn" onclick="calcSimple()">
+            <span>Calculate</span><span class="cta-arrow">⟶</span>
+          </button>
+          <button class="icon-btn" onclick="copyResults('simple')" title="Copy results">⎘</button>
+          <button class="icon-btn" onclick="exportCSV('simple')" title="Export CSV">↓</button>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="results-col">
+        <div class="big-result" id="big-simple">
+          <div class="big-tag">Net Gain / Loss</div>
+          <div class="big-value" id="bv-netgain">—</div>
+          <div class="big-sub" id="bs-netgain">After fees &amp; tax</div>
+          <div class="big-roi-bar">
+            <div class="roi-bar-track">
+              <div class="roi-bar-fill" id="roi-bar-fill" style="width:0%"></div>
+            </div>
+            <span class="roi-bar-label" id="roi-bar-label">ROI</span>
+          </div>
+        </div>
+
+        <div class="metric-strip">
+          <div class="metric">
+            <div class="metric-label">Total Return</div>
+            <div class="metric-val" id="mv-totalret">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">CAGR</div>
+            <div class="metric-val" id="mv-cagr">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Real Return</div>
+            <div class="metric-val dim" id="mv-real">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">After STT+Tax</div>
+            <div class="metric-val" id="mv-netval">—</div>
+          </div>
+        </div>
+
+        <!-- Benchmark comparison mini -->
+        <div class="bench-mini" id="bench-simple">
+          <div class="bench-mini-title">Your CAGR vs Benchmarks</div>
+          <div class="bench-mini-rows" id="bench-simple-rows"></div>
+        </div>
+
+        <div class="breakdown-toggle" onclick="toggleBd('s-bd')">
+          <span>Full P&amp;L Breakdown</span><span class="bd-chev">▾</span>
+        </div>
+        <div id="s-bd" class="bd-table bd-hidden">
+          <table><thead><tr><th>Item</th><th>Amount</th><th>%</th></tr></thead>
+          <tbody id="s-bd-body"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>💡 Tax Note:</strong> Short-term capital gains (held &lt;12 months for equity) are taxed at 15% (STCG). Long-term capital gains (&gt;12 months) above ₹1 lakh are taxed at 10% (LTCG) without indexation. Adjust the tax rate field accordingly.
+    </div>
+  </div><!-- /panel-simple -->
+
+
+  <!-- ════ PANEL 2 — COMPOUND INTEREST ════ -->
+  <div class="panel" id="panel-compound" style="display:none">
+    <div class="panel-header">
+      <div class="panel-tag">Module 02</div>
+      <h2 class="panel-title">Compound<br/><em>Interest</em></h2>
+      <p class="panel-blurb">Model exponential growth with adjustable compounding frequency. See Effective Annual Rate, Rule of 72 doubling time, and inflation-adjusted real value.</p>
+    </div>
+
+    <div class="calc-layout">
+      <div class="inputs-col">
+        <div class="field-section-label">Principal &amp; Rate</div>
+
+        <div class="field-group">
+          <label class="field-label">Principal Amount</label>
+          <div class="field-track">
+            <span class="field-curr">₹</span>
+            <input type="number" id="c-principal" value="500000" min="0" oninput="calcCompound()"/>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Annual Interest Rate
+            <span class="field-badge" id="c-rate-badge">12%</span>
+          </label>
+          <input type="range" class="styled-range" id="c-rate-r" min="0.5" max="30" step="0.5" value="12"
+                 oninput="syncS('c-rate','c-rate-badge',this.value,'%'); calcCompound()"/>
+          <input type="hidden" id="c-rate" value="12"/>
+          <div class="slider-ends"><span>0.5%</span><span>30%</span></div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Time Period
+            <span class="field-badge" id="c-years-badge">10 yrs</span>
+          </label>
+          <input type="range" class="styled-range" id="c-years-r" min="1" max="40" step="1" value="10"
+                 oninput="syncS('c-years','c-years-badge',this.value,'yrs'); calcCompound()"/>
+          <input type="hidden" id="c-years" value="10"/>
+          <div class="slider-ends"><span>1 yr</span><span>40 yrs</span></div>
+        </div>
+
+        <div class="field-section-label" style="margin-top:8px">Compounding</div>
+
+        <div class="field-group">
+          <label class="field-label">Compounding Frequency</label>
+          <div class="freq-pills">
+            <button class="freq-pill" data-n="1"   onclick="setFreq(1)">Annual</button>
+            <button class="freq-pill" data-n="2"   onclick="setFreq(2)">Semi</button>
+            <button class="freq-pill active" data-n="4" onclick="setFreq(4)">Quarterly</button>
+            <button class="freq-pill" data-n="12"  onclick="setFreq(12)">Monthly</button>
+            <button class="freq-pill" data-n="365" onclick="setFreq(365)">Daily</button>
+          </div>
+          <input type="hidden" id="c-freq" value="4"/>
+        </div>
+
+        <div class="two-col-fields">
+          <div class="field-group">
+            <label class="field-label">Tax on Interest</label>
+            <div class="field-track">
+              <input type="number" id="c-tax" value="30" min="0" max="50" oninput="calcCompound()"/>
+              <span class="field-unit">%</span>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Inflation Rate</label>
+            <div class="field-track">
+              <input type="number" id="c-inflation" value="5" step="0.1" min="0" oninput="calcCompound()"/>
+              <span class="field-unit">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="cta-btn" onclick="calcCompound()">
+            <span>Project Growth</span><span class="cta-arrow">⟶</span>
+          </button>
+          <button class="icon-btn" onclick="copyResults('compound')" title="Copy results">⎘</button>
+          <button class="icon-btn" onclick="exportCSV('compound')" title="Export CSV">↓</button>
+        </div>
+      </div>
+
+      <div class="results-col">
+        <div class="big-result big-gold">
+          <div class="big-tag">Maturity Value</div>
+          <div class="big-value" id="bv-maturity">—</div>
+          <div class="big-sub">Before tax deduction</div>
+          <!-- Rule of 72 -->
+          <div class="rule72" id="rule72-box">
+            <span class="rule72-label">Rule of 72 — doubles in</span>
+            <span class="rule72-val" id="rule72-val">—</span>
+          </div>
+        </div>
+
+        <div class="metric-strip cols-4">
+          <div class="metric">
+            <div class="metric-label">Total Interest</div>
+            <div class="metric-val green" id="mv-cinterest">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">EAR</div>
+            <div class="metric-val" id="mv-effective">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Post-Tax Value</div>
+            <div class="metric-val" id="mv-ctax">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Real Value</div>
+            <div class="metric-val dim" id="mv-creal">—</div>
+          </div>
+        </div>
+
+        <!-- Donut chart + growth chart -->
+        <div class="dual-chart">
+          <div class="chart-wrap half">
+            <div class="chart-label">Principal vs Interest</div>
+            <canvas id="compoundDonut" height="160"></canvas>
+            <div class="donut-legend" id="donut-legend-c"></div>
+          </div>
+          <div class="chart-wrap half">
+            <div class="chart-label">Growth Curve</div>
+            <canvas id="compoundChart" height="160"></canvas>
+          </div>
+        </div>
+
+        <div class="breakdown-toggle" onclick="toggleBd('c-bd')">
+          <span>Year-by-Year Breakdown</span><span class="bd-chev">▾</span>
+        </div>
+        <div id="c-bd" class="bd-table bd-hidden scroll-bd">
+          <table><thead><tr><th>Yr</th><th>Opening</th><th>Interest</th><th>Tax</th><th>After-Tax Int</th><th>Balance</th></tr></thead>
+          <tbody id="c-bd-body"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>💡 EAR vs APR:</strong> The Effective Annual Rate (EAR) accounts for compounding within the year and is always ≥ the stated rate. Daily compounding at 12% APR gives an EAR of ~12.75%. FD interest is typically compounded quarterly.
+    </div>
+  </div><!-- /panel-compound -->
+
+
+  <!-- ════ PANEL 3 — SIP ════ -->
+  <div class="panel" id="panel-sip" style="display:none">
+    <div class="panel-header">
+      <div class="panel-tag">Module 03</div>
+      <h2 class="panel-title">Systematic<br/><em>Investment Plan</em></h2>
+      <p class="panel-blurb">Monthly SIP with annual step-up, inflation adjustment, post-tax corpus, and lump-sum comparison — simulated month-by-month for up to 40 years.</p>
+    </div>
+
+    <div class="calc-layout">
+      <div class="inputs-col">
+        <div class="field-section-label">SIP Parameters</div>
+
+        <div class="field-group">
+          <label class="field-label">Monthly Investment Amount</label>
+          <div class="field-track">
+            <span class="field-curr">₹</span>
+            <input type="number" id="sip-monthly" value="10000" min="0" oninput="calcSIP()"/>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Expected Annual Return
+            <span class="field-badge" id="sip-rate-badge">12%</span>
+          </label>
+          <input type="range" class="styled-range" id="sip-rate-r" min="1" max="30" step="0.5" value="12"
+                 oninput="syncS('sip-rate','sip-rate-badge',this.value,'%'); calcSIP()"/>
+          <input type="hidden" id="sip-rate" value="12"/>
+          <div class="slider-ends"><span>1%</span><span>30%</span></div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Investment Duration
+            <span class="field-badge" id="sip-years-badge">15 yrs</span>
+          </label>
+          <input type="range" class="styled-range" id="sip-years-r" min="1" max="40" step="1" value="15"
+                 oninput="syncS('sip-years','sip-years-badge',this.value,'yrs'); calcSIP()"/>
+          <input type="hidden" id="sip-years" value="15"/>
+          <div class="slider-ends"><span>1 yr</span><span>40 yrs</span></div>
+        </div>
+
+        <div class="field-section-label" style="margin-top:8px">Advanced</div>
+
+        <div class="field-group">
+          <label class="field-label">Annual Step-Up (Increase SIP yearly)
+            <span class="field-badge" id="sip-step-badge">10%</span>
+          </label>
+          <input type="range" class="styled-range" id="sip-step-r" min="0" max="30" step="1" value="10"
+                 oninput="syncS('sip-stepup','sip-step-badge',this.value,'%'); calcSIP()"/>
+          <input type="hidden" id="sip-stepup" value="10"/>
+          <div class="slider-ends"><span>0% (flat)</span><span>30%</span></div>
+        </div>
+
+        <div class="two-col-fields">
+          <div class="field-group">
+            <label class="field-label">Inflation Rate</label>
+            <div class="field-track">
+              <input type="number" id="sip-inflation" value="6" step="0.5" min="0" oninput="calcSIP()"/>
+              <span class="field-unit">%</span>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Tax on LTCG</label>
+            <div class="field-track">
+              <input type="number" id="sip-tax" value="10" min="0" oninput="calcSIP()"/>
+              <span class="field-unit">%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lump Sum comparison -->
+        <div class="field-group">
+          <label class="field-label">Compare: Lump Sum Investment</label>
+          <div class="field-track">
+            <span class="field-curr">₹</span>
+            <input type="number" id="sip-lumpsum" value="0" min="0" oninput="calcSIP()"/>
+          </div>
+          <div class="field-hint">Enter a one-time amount to compare against your SIP corpus</div>
+        </div>
+
+        <div class="btn-row">
+          <button class="cta-btn" onclick="calcSIP()">
+            <span>Build Corpus</span><span class="cta-arrow">⟶</span>
+          </button>
+          <button class="icon-btn" onclick="copyResults('sip')" title="Copy results">⎘</button>
+          <button class="icon-btn" onclick="exportCSV('sip')" title="Export CSV">↓</button>
+        </div>
+      </div>
+
+      <div class="results-col">
+        <div class="big-result big-emerald">
+          <div class="big-tag">Total Corpus</div>
+          <div class="big-value" id="bv-corpus">—</div>
+          <div class="big-sub">At end of investment period</div>
+          <div class="lumpsum-compare" id="lumpsum-compare" style="display:none">
+            <span class="lc-label">Lump sum would give:</span>
+            <span class="lc-val" id="lc-val">—</span>
+            <span class="lc-diff" id="lc-diff">SIP is better by</span>
+          </div>
+        </div>
+
+        <div class="metric-strip cols-4">
+          <div class="metric">
+            <div class="metric-label">Total Invested</div>
+            <div class="metric-val dim" id="mv-invested">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Returns Earned</div>
+            <div class="metric-val green" id="mv-sipgain">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">XIRR (approx)</div>
+            <div class="metric-val" id="mv-xirr">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Real Corpus</div>
+            <div class="metric-val dim" id="mv-sipreal">—</div>
+          </div>
+        </div>
+
+        <!-- Donut + growth chart -->
+        <div class="dual-chart">
+          <div class="chart-wrap half">
+            <div class="chart-label">Invested vs Returns</div>
+            <canvas id="sipDonut" height="160"></canvas>
+            <div class="donut-legend" id="donut-legend-sip"></div>
+          </div>
+          <div class="chart-wrap half">
+            <div class="chart-label">Corpus Growth</div>
+            <canvas id="sipChart" height="160"></canvas>
+          </div>
+        </div>
+
+        <div class="breakdown-toggle" onclick="toggleBd('sip-bd')">
+          <span>Year-by-Year SIP Table</span><span class="bd-chev">▾</span>
+        </div>
+        <div id="sip-bd" class="bd-table bd-hidden scroll-bd">
+          <table><thead><tr><th>Yr</th><th>Monthly SIP</th><th>Yr Invested</th><th>Total Invested</th><th>Returns</th><th>Corpus</th></tr></thead>
+          <tbody id="sip-bd-body"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>💡 Step-Up SIP:</strong> Increasing your SIP by 10% per year (in line with salary hikes) can nearly double your corpus versus a flat SIP. XIRR is the annualised return that equates all cash flows to the final corpus, the most accurate measure for SIPs.
+    </div>
+  </div><!-- /panel-sip -->
+
+
+  <!-- ════ PANEL 4 — GOAL PLANNER ════ -->
+  <div class="panel" id="panel-goal" style="display:none">
+    <div class="panel-header">
+      <div class="panel-tag">Module 04</div>
+      <h2 class="panel-title">Goal<br/><em>Planner</em></h2>
+      <p class="panel-blurb">Work backwards from your financial target. Enter your goal amount, timeline, and expected return — get the exact monthly SIP you need to invest today.</p>
+    </div>
+
+    <div class="calc-layout">
+      <div class="inputs-col">
+        <div class="field-section-label">Your Goal</div>
+
+        <div class="field-group">
+          <label class="field-label">Target Corpus (Goal Amount)</label>
+          <div class="field-track">
+            <span class="field-curr">₹</span>
+            <input type="number" id="g-target" value="10000000" min="0" oninput="calcGoal()"/>
+          </div>
+          <div class="field-hint">e.g. ₹1 Crore for retirement</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Goal Category</label>
+          <div class="goal-pills">
+            <button class="goal-pill active" onclick="setGoalPreset(this,10000000,'Retirement',20,12)">🏖 Retirement</button>
+            <button class="goal-pill" onclick="setGoalPreset(this,3000000,'Child Education',15,10)">🎓 Education</button>
+            <button class="goal-pill" onclick="setGoalPreset(this,5000000,'Home Down Payment',10,8)">🏡 Home</button>
+            <button class="goal-pill" onclick="setGoalPreset(this,2000000,'Emergency Fund',5,7)">🛡 Emergency</button>
+            <button class="goal-pill" onclick="setGoalPreset(this,500000,'Vacation',3,9)">✈ Vacation</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Time to Achieve Goal
+            <span class="field-badge" id="g-years-badge">20 yrs</span>
+          </label>
+          <input type="range" class="styled-range" id="g-years-r" min="1" max="40" step="1" value="20"
+                 oninput="syncS('g-years','g-years-badge',this.value,'yrs'); calcGoal()"/>
+          <input type="hidden" id="g-years" value="20"/>
+          <div class="slider-ends"><span>1 yr</span><span>40 yrs</span></div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Expected Annual Return
+            <span class="field-badge" id="g-rate-badge">12%</span>
+          </label>
+          <input type="range" class="styled-range" id="g-rate-r" min="1" max="30" step="0.5" value="12"
+                 oninput="syncS('g-rate','g-rate-badge',this.value,'%'); calcGoal()"/>
+          <input type="hidden" id="g-rate" value="12"/>
+          <div class="slider-ends"><span>1%</span><span>30%</span></div>
+        </div>
+
+        <div class="two-col-fields">
+          <div class="field-group">
+            <label class="field-label">Annual Step-Up
+              <span class="field-badge" id="g-step-badge">10%</span>
+            </label>
+            <input type="range" class="styled-range" id="g-step-r" min="0" max="30" step="1" value="10"
+                   oninput="syncS('g-stepup','g-step-badge',this.value,'%'); calcGoal()"/>
+            <input type="hidden" id="g-stepup" value="10"/>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Inflation Rate</label>
+            <div class="field-track">
+              <input type="number" id="g-inflation" value="6" step="0.5" min="0" oninput="calcGoal()"/>
+              <span class="field-unit">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="cta-btn" onclick="calcGoal()">
+            <span>Plan My Goal</span><span class="cta-arrow">⟶</span>
+          </button>
+          <button class="icon-btn" onclick="copyResults('goal')" title="Copy results">⎘</button>
+        </div>
+      </div>
+
+      <div class="results-col">
+        <div class="big-result big-purple">
+          <div class="big-tag">Monthly SIP Required</div>
+          <div class="big-value" id="bv-sip-needed">—</div>
+          <div class="big-sub" id="bs-goal">Starting amount (grows with step-up)</div>
+        </div>
+
+        <div class="metric-strip cols-4">
+          <div class="metric">
+            <div class="metric-label">Total to Invest</div>
+            <div class="metric-val dim" id="mv-g-invested">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Returns Earned</div>
+            <div class="metric-val green" id="mv-g-returns">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Inflation-Adj Goal</div>
+            <div class="metric-val amber" id="mv-g-realgoal">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">SIP in 5yr</div>
+            <div class="metric-val" id="mv-g-sip5">—</div>
+          </div>
+        </div>
+
+        <!-- Goal progress chart -->
+        <div class="chart-wrap">
+          <div class="chart-label">Corpus Progress Towards Goal</div>
+          <canvas id="goalChart" height="180"></canvas>
+        </div>
+
+        <!-- Scenario table: returns sensitivity -->
+        <div class="breakdown-toggle" onclick="toggleBd('g-sensitivity')">
+          <span>Sensitivity: What If Returns Change?</span><span class="bd-chev">▾</span>
+        </div>
+        <div id="g-sensitivity" class="bd-table bd-hidden">
+          <table><thead><tr><th>Annual Return</th><th>Monthly SIP</th><th>Total Invested</th><th>Gain</th></tr></thead>
+          <tbody id="g-sensitivity-body"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>💡 Goal Planning Tip:</strong> The inflation-adjusted goal shows what your target amount is worth in today's rupees. A ₹1 Crore goal in 20 years at 6% inflation is actually worth only ~₹31 Lakh today. Factor this in when setting targets.
+    </div>
+  </div><!-- /panel-goal -->
+
+</section><!-- /calculators -->
+
+
+<!-- ══════════════════════════════════════════════
+     BENCHMARKS SECTION
+══════════════════════════════════════════════ -->
+<section class="benchmarks-section" id="benchmarks">
+  <div class="section-header">
+    <div class="section-tag">Market Context</div>
+    <h2 class="section-title">Historical<br/><em>Benchmarks</em></h2>
+    <p class="section-sub">How do different asset classes compare over the long run? Use these as reference when evaluating your investments.</p>
+  </div>
+
+  <div class="bench-grid">
+    <div class="bench-card bench-clickable" onclick="openBenchDetail('nifty50')">
+      <div class="bench-card-inner">
+        <div class="bench-asset">Nifty 50</div>
+        <div class="bench-type">Equity Index</div>
+        <div class="bench-return lime">14.8% <span>CAGR (20yr)</span></div>
+        <div class="bench-bar"><div class="bench-fill" style="width:74%"></div></div>
+        <div class="bench-note">India's benchmark equity index. Best for long-term (10yr+) horizon.</div>
+        <div class="bench-click-hint">Tap for full analysis ↗</div>
+      </div>
+    </div>
+    <div class="bench-card bench-clickable" onclick="openBenchDetail('midcap')">
+      <div class="bench-card-inner">
+        <div class="bench-asset">Nifty Midcap 150</div>
+        <div class="bench-type">Mid-Cap Equity</div>
+        <div class="bench-return lime">17.2% <span>CAGR (10yr)</span></div>
+        <div class="bench-bar"><div class="bench-fill" style="width:86%"></div></div>
+        <div class="bench-note">Higher returns with higher volatility. Suited for aggressive investors.</div>
+        <div class="bench-click-hint">Tap for full analysis ↗</div>
+      </div>
+    </div>
+    <div class="bench-card bench-clickable" onclick="openBenchDetail('gold')">
+      <div class="bench-card-inner">
+        <div class="bench-asset">Gold (MCX)</div>
+        <div class="bench-type">Commodity</div>
+        <div class="bench-return amber">11.4% <span>CAGR (20yr)</span></div>
+        <div class="bench-bar"><div class="bench-fill amber" style="width:57%"></div></div>
+        <div class="bench-note">Effective inflation hedge. Low correlation with equity markets.</div>
+        <div class="bench-click-hint">Tap for full analysis ↗</div>
+      </div>
+    </div>
+    <div class="bench-card bench-clickable" onclick="openBenchDetail('ppf')">
+      <div class="bench-card-inner">
+        <div class="bench-asset">PPF</div>
+        <div class="bench-type">Government Scheme</div>
+        <div class="bench-return dim">7.1% <span>Current rate</span></div>
+        <div class="bench-bar"><div class="bench-fill dim" style="width:36%"></div></div>
+        <div class="bench-note">Tax-exempt under EEE. Safe, government-backed, 15yr lock-in.</div>
+        <div class="bench-click-hint">Tap for full analysis ↗</div>
+      </div>
+    </div>
+    <div class="bench-card bench-clickable" onclick="openBenchDetail('fd')">
+      <div class="bench-card-inner">
+        <div class="bench-asset">Bank FD</div>
+        <div class="bench-type">Debt Instrument</div>
+        <div class="bench-return dim">6.5–7.5% <span>Current rates</span></div>
+        <div class="bench-bar"><div class="bench-fill dim" style="width:33%"></div></div>
+        <div class="bench-note">Fully taxable. Real return near 0% after 30% tax + 6% inflation.</div>
+        <div class="bench-click-hint">Tap for full analysis ↗</div>
+      </div>
+    </div>
+    <div class="bench-card bench-clickable" onclick="openBenchDetail('realestate')">
+      <div class="bench-card-inner">
+        <div class="bench-asset">Real Estate</div>
+        <div class="bench-type">Physical Asset</div>
+        <div class="bench-return amber">8–12% <span>City-dependent</span></div>
+        <div class="bench-bar"><div class="bench-fill amber" style="width:50%"></div></div>
+        <div class="bench-note">Illiquid. Returns vary by location. Rental yield adds ~2-3%.</div>
+        <div class="bench-click-hint">Tap for full analysis ↗</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BENCHMARK DETAIL MODAL -->
+  <div class="bench-overlay" id="benchOverlay" onclick="closeBenchDetail()"></div>
+  <div class="bench-detail-modal" id="benchDetailModal">
+    <button class="bdm-close" onclick="closeBenchDetail()">✕</button>
+    <div class="bdm-content" id="bdmContent"></div>
+  </div>
+
+  <p class="bench-disclaimer">Data is historical and for illustrative purposes only. Past performance does not guarantee future results. Sources: NSE, RBI, MCX (2004–2024 averages).</p>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════════════════ -->
+<section class="how-section">
+  <div class="section-header">
+    <div class="section-tag">How It Works</div>
+    <h2 class="section-title">Three Steps to<br/><em>Clarity</em></h2>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <h3>Choose a Calculator</h3>
+      <p>Select from Simple Return, Compound Interest, SIP Planner, or Goal Planner based on your investment type.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <h3>Enter Your Numbers</h3>
+      <p>Input your investment amount, rate, tenure, tax rate, and inflation. All fields have smart defaults to get you started instantly.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <h3>Analyse &amp; Export</h3>
+      <p>Review your charts, year-by-year tables, and summary metrics. Download as CSV or copy to share with your advisor.</p>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ══════════════════════════════════════════════
+     FAQ + DISCLAIMER (HORIZONTAL)
+══════════════════════════════════════════════ -->
+<section class="faq-disclaimer-section" id="faq">
+  <div class="faq-disclaimer-inner">
+
+    <!-- LEFT: FAQ -->
+    <div class="faq-col">
+      <div class="section-tag" style="margin-bottom:16px">FAQs</div>
+      <h2 class="section-title" style="text-align:left;margin-bottom:28px">Common<br/><em>Questions</em></h2>
+
+      <div class="faq-list" id="faqList">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>What is CAGR vs absolute return?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>Absolute return is the total % gain/loss on an investment. CAGR (Compound Annual Growth Rate) normalises this over the years held. A 50% gain over 5 years equals a CAGR of ~8.45% — not 10%. CAGR is always preferred for comparing investments held over different time periods.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>Difference between STCG and LTCG?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>For equity in India: STCG (held &lt;12 months) is taxed at 15%. LTCG (held &gt;12 months, gains above ₹1 lakh) is taxed at 10% without indexation. For debt funds/FDs, gains are added to income and taxed at your slab rate.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>What is the Rule of 72?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>Divide 72 by the annual interest rate to estimate how many years it takes to double your money. At 12%/yr → doubles in ~6 years. At 6%/yr → ~12 years. This applies to compound interest investments.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>Why does "Real Return" look so much lower?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>Inflation erodes purchasing power. A 12% nominal return with 6% inflation gives a real return of only ~5.66%. In 20 years, ₹1 Crore at 6% inflation is worth only ~₹31 Lakh in today's money. Always plan with inflation in mind.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>What is XIRR and why does it matter for SIPs?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>XIRR (Extended IRR) is the most accurate return measure for investments with multiple cash flows at different times — like a SIP. Unlike CAGR which assumes a single lump sum, XIRR accounts for the timing of each monthly contribution. It's the standard metric mutual funds use.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>How accurate are these calculations?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>We use standard financial formulas (A = P(1+r/n)^nt for CI, month-by-month simulation for SIP) following Indian tax laws (2024). These are projections — actual returns depend on markets, fund expenses, and future tax changes. Consult a SEBI-registered advisor for personalised advice.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>Is my data stored or shared?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>No. All calculations run entirely in your browser. No data is sent to any server. We don't store, track, or share your financial inputs. Check the page source — there are zero API calls or data transmissions.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span>What is a Step-Up SIP and should I use one?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>A Step-Up SIP increases your monthly contribution by a fixed % each year, aligned with salary hikes. Starting at ₹10,000 with a 10% step-up means ₹11,000 in year 2, ₹12,100 in year 3, and so on. This can boost your corpus by 50–80% more than a flat SIP over the same period.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: DISCLAIMER -->
+    <div class="disclaimer-col">
+      <div class="disclaimer-card">
+        <div class="disclaimer-header">
+          <span class="disclaimer-warn-icon">⚠</span>
+          <div>
+            <div class="section-tag" style="margin-bottom:8px">Legal Notice</div>
+            <h3 class="disclaimer-title">Important<br/><em>Disclaimer</em></h3>
+          </div>
+        </div>
+        <div class="disclaimer-body">
+          <p>FOLIO is an educational financial calculator tool. All projections, calculations, and benchmark data are for informational and illustrative purposes only.</p>
+          <ul class="disclaimer-list">
+            <li>Does not constitute financial, investment, tax, or legal advice</li>
+            <li>Past market performance does not guarantee future results</li>
+            <li>Investment returns are subject to market risks</li>
+            <li>Tax treatment depends on individual circumstances and may change with future budget announcements</li>
+            <li>Please read all scheme-related documents carefully before investing</li>
+            <li>Consult a SEBI-registered investment advisor before making any investment decisions</li>
+          </ul>
+          <p class="disclaimer-footer-note">The creators of FOLIO are not responsible for any financial decisions made based on the output of this tool.</p>
+          <div class="disclaimer-badge">
+            <span>🛡</span>
+            <span>Not a SEBI-registered entity · For educational use only</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-brand-col">
+      <div class="footer-logo">
+        <span class="brand-logo">F</span>
+        <span class="brand-name">FOLIO</span>
+      </div>
+      <p class="footer-tagline">Return Intelligence Platform.<br/>Built for the serious Indian investor.</p>
+      <div class="footer-social">
+        <a href="#" class="social-link" title="Twitter/X">𝕏</a>
+        <a href="#" class="social-link" title="LinkedIn">in</a>
+        <a href="#" class="social-link" title="GitHub">gh</a>
+      </div>
+    </div>
+
+    <div class="footer-links-col">
+      <h4>Calculators</h4>
+      <ul>
+        <li><a href="#" onclick="switchMode('simple'); return false;">Simple Return</a></li>
+        <li><a href="#" onclick="switchMode('compound'); return false;">Compound Interest</a></li>
+        <li><a href="#" onclick="switchMode('sip'); return false;">SIP Planner</a></li>
+        <li><a href="#" onclick="switchMode('goal'); return false;">Goal Planner</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links-col">
+      <h4>Learn</h4>
+      <ul>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#benchmarks">Market Benchmarks</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How It Works</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#">Disclaimer</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 FOLIO Financial Tools. All rights reserved. Not a SEBI-registered entity.</div>
+    <div class="footer-actions">
+      <button class="reset-link" onclick="resetAll()">↺ Reset All Fields</button>
+      <button class="reset-link" onclick="window.print()">🖨 Print Page</button>
+    </div>
+  </div>
+</footer>
+  
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="script.js"></script>
+
+<!-- ══ FOLIO AI — Custom Chatbot Button ══ -->
+<!-- AI Nudge Chip (appears after 4s) -->
+<div class="ai-nudge-chip" id="aiNudgeChip" onclick="toggleFolioChat()">
+  <div class="ai-nudge-icon">◈</div>
+  <span>Have a question? Ask FOLIO AI</span>
+  <button class="ai-nudge-close" onclick="event.stopPropagation();dismissNudge()" aria-label="close">×</button>
+</div>
+
+<!-- Chat Button -->
+<div class="folio-chat-wrapper" id="folioChatWrapper" onclick="toggleFolioChat()">
+  <div class="chat-glow"></div>
+
+  <!-- ★ OPTION 1: Hex AI Core — ACTIVE (recommended) -->
+  <div class="folio-chat-btn hex-design" id="folioChatBtn">
+    <div class="hex-ring"></div>
+    <div class="hex-body"><div class="hex-core"></div></div>
+  </div>
+
+  <!-- ★ OPTION 2: Orbital Bot — To use: delete the hex-design div above and uncomment below
+  <div class="folio-chat-btn orbital-design" id="folioChatBtn">
+    <div class="orb-ring orb-r3"></div>
+    <div class="orb-ring orb-r2"></div>
+    <div class="orb-ring orb-r1"></div>
+    <div class="orb-core"></div>
+  </div> -->
+
+  <!-- ★ OPTION 3: Crystal AI — To use: delete the hex-design div above and uncomment below
+  <div class="folio-chat-btn crystal-design" id="folioChatBtn">
+    <div class="crystal-gem"></div>
+  </div> -->
+
+  <div class="chat-notif-dot" id="chatNotifDot"></div>
+  <div class="chat-badge">FOLIO AI</div>
+  <div class="chat-tooltip">Ask FOLIO AI ↗</div>
+</div>
+
+<!-- ══ FOLIO AI — Chatbase Iframe Chatbot ══ -->
+
+<!-- Hidden iframe panel — toggles on custom button click -->
+<div id="folioChatPanel" style="
+  display:none; position:fixed; bottom:108px; right:28px; z-index:99980;
+  width:min(420px, calc(100vw - 40px)); height:min(660px, calc(100vh - 140px));
+  border-radius:20px; overflow:hidden;
+  box-shadow:0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(37,99,235,0.25);
+  animation:chatPanelIn 0.38s cubic-bezier(0.16,1,0.3,1) both;
+">
+  <iframe
+    src="https://www.chatbase.co/chatbot-iframe/OCl8JEhpYqe0KlL-NXu2y"
+    width="100%"
+    style="height:100%;border:none;display:block;"
+    frameborder="0"
+    allow="microphone"
+    title="FOLIO AI Assistant"
+  ></iframe>
+</div>
+
+<style>
+  @keyframes chatPanelIn {
+    from { opacity:0; transform:translateY(16px) scale(0.97); }
+    to   { opacity:1; transform:none; }
+  }
+  @media (max-width:480px) {
+    #folioChatPanel {
+      bottom:96px !important; right:0 !important; left:0 !important;
+      width:100vw !important; border-radius:20px 20px 0 0 !important;
+      height:75vh !important;
+    }
+  }
+</style>
+
+<script>
+  var _chatOpen = false;
+
+  function toggleFolioChat() {
+    var panel = document.getElementById('folioChatPanel');
+    var dot   = document.getElementById('chatNotifDot');
+
+    // Hide notification dot
+    if (dot) { dot.style.opacity='0'; setTimeout(function(){ if(dot) dot.style.display='none'; },300); }
+
+    // Dismiss nudge chip
+    dismissNudge();
+
+    if (_chatOpen) {
+      // Close with fade-out
+      panel.style.transition = 'opacity 0.22s ease, transform 0.22s ease';
+      panel.style.opacity    = '0';
+      panel.style.transform  = 'translateY(12px) scale(0.97)';
+      setTimeout(function() {
+        panel.style.display    = 'none';
+        panel.style.transition = '';
+        panel.style.opacity    = '';
+        panel.style.transform  = '';
+      }, 220);
+      _chatOpen = false;
+    } else {
+      // Open
+      panel.style.display = 'block';
+      _chatOpen = true;
+    }
+  }
+
+  function dismissNudge() {
+    var c = document.getElementById('aiNudgeChip');
+    if (c) { c.style.opacity='0'; c.style.transform='translateY(10px) scale(0.95)'; setTimeout(function(){if(c&&c.parentNode)c.remove();},500); }
+  }
+
+  // Show nudge chip after 4s
+  setTimeout(function() {
+    var c = document.getElementById('aiNudgeChip');
+    if (c) c.classList.add('visible');
+  }, 4000);
+
+  // Auto-dismiss nudge after 14s
+  setTimeout(dismissNudge, 14000);
+
+  // Close chat panel when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!_chatOpen) return;
+    var panel  = document.getElementById('folioChatPanel');
+    var btnWrp = document.getElementById('folioChatWrapper');
+    if (panel && !panel.contains(e.target) && btnWrp && !btnWrp.contains(e.target)) {
+      toggleFolioChat();
+    }
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && _chatOpen) toggleFolioChat();
+  });
+</script>
+
+
+<!-- ══ STOCK SEARCH MODAL — moved to body root so position:fixed works ══ -->
+<style>
+  /* ── Overlay ── */
+  #stockSearchOverlay {
+    position: fixed; inset: 0; z-index: 9500;
+    background: rgba(4,6,14,0.72);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.28s ease;
+  }
+  #stockSearchOverlay.open { opacity: 1; pointer-events: all; }
+  body.light #stockSearchOverlay { background: rgba(15,23,42,0.45); }
+
+  /* ── Modal panel ── */
+  #stockSearchModal {
+    position: fixed; top: 80px; left: 50%;
+    transform: translateX(-50%) translateY(-14px);
+    z-index: 9501; width: min(580px, 94vw);
+    background: #0D1426;
+    border: 1px solid rgba(37,99,235,0.35);
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(37,99,235,0.12);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.32s cubic-bezier(0.16,1,0.3,1),
+                transform 0.32s cubic-bezier(0.16,1,0.3,1);
+  }
+  #stockSearchModal.open {
+    opacity: 1; pointer-events: all;
+    transform: translateX(-50%) translateY(0);
+  }
+  body.light #stockSearchModal {
+    background: #FFFFFF;
+    border-color: rgba(37,99,235,0.2);
+    box-shadow: 0 24px 64px rgba(15,23,42,0.16), 0 0 0 1px rgba(37,99,235,0.1);
+  }
+
+  /* ── Header row ── */
+  #stockSearchModal .ssm-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 18px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    background: rgba(37,99,235,0.07);
+  }
+  body.light #stockSearchModal .ssm-head {
+    border-bottom-color: rgba(15,23,42,0.08);
+    background: rgba(37,99,235,0.04);
+  }
+  #stockSearchModal .ssm-head svg {
+    color: #60A5FA; flex-shrink: 0;
+  }
+  body.light #stockSearchModal .ssm-head svg { color: #2563EB; }
+
+  #stockSearchModal .ssm-head input {
+    flex: 1; background: transparent; border: none; outline: none;
+    font-family: 'Syne', system-ui, sans-serif;
+    font-size: 15px; font-weight: 500;
+    color: #F1F5F9; caret-color: #60A5FA;
+  }
+  body.light #stockSearchModal .ssm-head input { color: #0F172A; caret-color: #2563EB; }
+  #stockSearchModal .ssm-head input::placeholder { color: #475569; }
+
+  #stockSearchModal .ssm-x {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; color: #64748B; font-size: 16px; cursor: pointer;
+    padding: 4px 10px; line-height: 1; transition: all 0.18s;
+    flex-shrink: 0; font-family: system-ui;
+  }
+  #stockSearchModal .ssm-x:hover { border-color: #2563EB; color: #60A5FA; background: rgba(37,99,235,0.15); }
+
+  /* ── Body ── */
+  #stockSearchModal .ssm-bd { padding: 16px 18px 18px; }
+  #stockSearchModal .ssm-picks-label {
+    font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: #475569; margin-bottom: 12px;
+  }
+  #stockSearchModal .ssm-chips-row {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  #stockSearchModal .ssm-chip-btn {
+    padding: 7px 14px;
+    background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.25);
+    border-radius: 22px;
+    font-family: 'Syne', system-ui, sans-serif; font-size: 11px; font-weight: 700;
+    color: #60A5FA; cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.16,1,0.3,1);
+    letter-spacing: 0.02em;
+  }
+  #stockSearchModal .ssm-chip-btn:hover {
+    background: rgba(37,99,235,0.28); border-color: #3B82F6; color: #fff;
+    transform: translateY(-1px);
+  }
+  #stockSearchModal .ssm-chip-btn:active { transform: scale(0.95); }
+  body.light #stockSearchModal .ssm-chip-btn { color: #2563EB; }
+  body.light #stockSearchModal .ssm-chip-btn:hover { color: #fff; }
+
+  /* ── Result area ── */
+  #ssmResult { padding: 0 18px 18px; }
+
+  /* Loading spinner */
+  .ssm-loading {
+    display: flex; align-items: center; gap: 12px; padding: 22px 0;
+    font-family: 'Syne', system-ui, sans-serif; font-size: 13px; color: #64748B;
+  }
+  .ssm-spinner {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.1); border-top-color: #60A5FA;
+    animation: ssm-spin 0.7s linear infinite; flex-shrink: 0;
+  }
+  body.light .ssm-spinner { border-color: rgba(15,23,42,0.1); border-top-color: #2563EB; }
+  @keyframes ssm-spin { to { transform: rotate(360deg); } }
+
+  /* Stock result card */
+  .ssm-stock-card {
+    background: rgba(37,99,235,0.07); border: 1px solid rgba(37,99,235,0.22);
+    border-radius: 16px; padding: 20px 18px; margin-top: 4px;
+  }
+  body.light .ssm-stock-card { background: rgba(37,99,235,0.04); border-color: rgba(37,99,235,0.15); }
+
+  .ssc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; gap: 12px; }
+  .ssc-name { font-family: 'Syne', system-ui, sans-serif; font-size: 17px; font-weight: 800; color: #F1F5F9; margin-bottom: 3px; }
+  body.light .ssc-name { color: #0F172A; }
+  .ssc-sym { font-family: 'Space Mono', monospace; font-size: 9px; color: #475569; letter-spacing: 0.09em; }
+  .ssc-price-val {
+    font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700;
+    color: #F1F5F9; text-align: right; line-height: 1;
+  }
+  body.light .ssc-price-val { color: #0F172A; }
+  .ssc-chg { font-family: 'Syne', system-ui, sans-serif; font-size: 13px; font-weight: 700; text-align: right; margin-top: 4px; }
+  .ssc-chg.pos { color: #10B981; }
+  .ssc-chg.neg { color: #EF4444; }
+
+  .ssc-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ssc-tag {
+    font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.06em;
+    padding: 5px 10px; border-radius: 6px;
+    color: #64748B; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+  }
+  body.light .ssc-tag { background: rgba(15,23,42,0.05); border-color: rgba(15,23,42,0.1); }
+  .ssc-delay { color: #F59E0B !important; border-color: rgba(245,158,11,0.2) !important; background: rgba(245,158,11,0.06) !important; }
+
+  .ssm-err {
+    padding: 20px 0; font-family: 'Syne', system-ui, sans-serif;
+    font-size: 13px; color: #EF4444; display: flex; align-items: center; gap: 10px;
+  }
+
+  /* Mobile: slide up from bottom */
+  @media (max-width: 640px) {
+    #stockSearchModal {
+      top: auto !important; bottom: 0; left: 0; right: 0; width: 100% !important;
+      border-radius: 22px 22px 0 0 !important;
+      transform: translateY(20px) !important;
+      max-height: 82vh; overflow-y: auto;
+    }
+    #stockSearchModal.open { transform: translateY(0) !important; }
+    #stockSearchModal .ssm-head input { font-size: 16px; }
+  }
+</style>
+
+<div id="stockSearchOverlay" onclick="closeStockSearch()"></div>
+<div id="stockSearchModal">
+  <!-- Drag handle (mobile) -->
+  <div style="width:36px;height:4px;background:rgba(255,255,255,0.12);border-radius:2px;margin:12px auto 0;display:none;" class="ssm-mobile-handle"></div>
+
+  <div class="ssm-head">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="stockSearchInput"
+      placeholder="Search NSE stocks — RELIANCE, TCS, INFY, NIFTY…"
+      autocomplete="off"
+      oninput="handleStockSearch(this.value)"
+      onkeydown="handleSearchKey(event)"/>
+    <button class="ssm-x" onclick="closeStockSearch()" aria-label="Close">✕</button>
+  </div>
+
+  <div class="ssm-bd" id="ssmBody">
+    <div class="ssm-picks-label">⚡ Quick picks</div>
+    <div class="ssm-chips-row">
+      <button class="ssm-chip-btn" onclick="searchStock('NIFTY 50','^NSEI')">NIFTY 50</button>
+      <button class="ssm-chip-btn" onclick="searchStock('SENSEX','^BSESN')">SENSEX</button>
+      <button class="ssm-chip-btn" onclick="searchStock('RELIANCE','RELIANCE.NS')">RELIANCE</button>
+      <button class="ssm-chip-btn" onclick="searchStock('TCS','TCS.NS')">TCS</button>
+      <button class="ssm-chip-btn" onclick="searchStock('HDFCBANK','HDFCBANK.NS')">HDFCBANK</button>
+      <button class="ssm-chip-btn" onclick="searchStock('INFY','INFY.NS')">INFY</button>
+      <button class="ssm-chip-btn" onclick="searchStock('SBIN','SBIN.NS')">SBIN</button>
+      <button class="ssm-chip-btn" onclick="searchStock('ICICIBANK','ICICIBANK.NS')">ICICIBANK</button>
+      <button class="ssm-chip-btn" onclick="searchStock('BAJFINANCE','BAJFINANCE.NS')">BAJFINANCE</button>
+      <button class="ssm-chip-btn" onclick="searchStock('GOLD MCX','GC=F')">GOLD</button>
+      <button class="ssm-chip-btn" onclick="searchStock('USD/INR','INR=X')">USD/INR</button>
+      <button class="ssm-chip-btn" onclick="searchStock('BHARTIARTL','BHARTIARTL.NS')">AIRTEL</button>
+    </div>
+  </div>
+
+  <div id="ssmResult" style="display:none"></div>
+</div>
+
+<style>
+  /* show drag handle on mobile */
+  @media (max-width:640px) { .ssm-mobile-handle { display:block !important; } }
+</style>
+
+</body>
+</html>
